@@ -1,0 +1,29 @@
+type ItemBought @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  price: BigInt! # uint256
+  buyer: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ItemCancelled @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  price: BigInt! # uint256
+  seller: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
+
+type ItemListed @entity(immutable: true) {
+  id: Bytes!
+  gameId: BigInt! # uint256
+  price: BigInt! # uint256
+  seller: Bytes! # address
+  blockNumber: BigInt!
+  blockTimestamp: BigInt!
+  transactionHash: Bytes!
+}
