@@ -1,6 +1,6 @@
 specVersion: 0.0.5
 schema:
-  file: ./schema.graphql
+  file: schema.graphql
 dataSources:
   - kind: ethereum
     name: GameKeyMarketplace
@@ -19,7 +19,7 @@ dataSources:
         - ItemListed
       abis:
         - name: GameKeyMarketplace
-          file: ./abis/GameKeyMarketplace.json
+          file: GameKeyMarketplace\abis\GameKeyMarketplace.json
       eventHandlers:
         - event: ItemBought(indexed uint256,indexed uint256,indexed address)
           handler: handleItemBought
@@ -27,4 +27,4 @@ dataSources:
           handler: handleItemCancelled
         - event: ItemListed(indexed uint256,indexed uint256,indexed address)
           handler: handleItemListed
-      file: ./src/game-key-marketplace.ts
+      file: GameKeyMarketplace\GameKeyMarketplace.wasm
