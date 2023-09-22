@@ -1,4 +1,4 @@
-type ItemBought @entity(immutable: true) {
+type ItemBought @entity(immutable: false) {
   id: ID!
   gameId: BigInt! # uint256
   price: BigInt! # uint256
@@ -13,10 +13,22 @@ type ItemCancelled @entity(immutable: true) {
   seller: Bytes! # address
 }
 
-type ItemListed @entity(immutable: true) {
+type ItemListed @entity(immutable: false) {
   id: ID!
   gameId: BigInt! # uint256
   price: BigInt! # uint256
   seller: Bytes! # address
   numOfItems: BigInt! # uint256
+}
+
+type AllGames @entity(immutable: false) {
+  id: ID!
+  gameId: BigInt! # uint256
+  allListings: [AllGamesGroupedByPrice!]
+}
+
+type AllGamesGroupedByPrice @entity(immutable: false) {
+  id: ID!
+  price: BigInt! # address
+  listings: [ItemListed!]!
 }

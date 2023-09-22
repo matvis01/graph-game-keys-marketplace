@@ -1,9 +1,15 @@
 import {
   ItemBought as ItemBoughtEvent,
   ItemCancelled as ItemCancelledEvent,
-  ItemListed as ItemListedEvent,
+  ItemListed as ItemListedEvent
 } from "../generated/GameKeyMarketplace/GameKeyMarketplace";
-import { ItemBought, ItemCancelled, ItemListed } from "../generated/schema";
+import {
+  ItemBought,
+  ItemCancelled,
+  ItemListed,
+  AllGames,
+  AllGamesGroupedByPrice
+} from "../generated/schema";
 import { BigInt, Address, Bytes } from "@graphprotocol/graph-ts";
 
 export function handleItemBought(event: ItemBoughtEvent): void {
@@ -64,6 +70,41 @@ export function handleItemListed(event: ItemListedEvent): void {
     item.numOfItems = item.numOfItems.plus(BigInt.fromI32(1));
   }
   item.save();
+
+  let allListingsOfThisGame = AllGames.load(event.params.gameId.toString());
+  if (!allListingsOfThisGame) {
+    allListingsOfThisGame = new AllGames(event.params.gameId.toString());
+    allListingsOfThisGame.gameId = event.params.gameId;
+    let allGamesGroupedByPrice = new AllGamesGroupedByPrice(
+      getIdForGroupOfListings(event.params.gameId, event.params.price)
+    );
+    allGamesGroupedByPrice.price = event.params.price;
+    allGamesGroupedByPrice.listings = [id];
+    allListingsOfThisGame.allListings = [
+      getIdForGroupOfListings(event.params.gameId, event.params.price)
+    ];
+    allGamesGroupedByPrice.save();
+  } else {
+    let allGamesGroupedByPrice = AllGamesGroupedByPrice.load(
+      getIdForGroupOfListings(event.params.gameId, event.params.price)
+    );
+    if (!allGamesGroupedByPrice) {
+      allGamesGroupedByPrice = new AllGamesGroupedByPrice(
+        getIdForGroupOfListings(event.params.gameId, event.params.price)
+      );
+      allGamesGroupedByPrice.price = event.params.price;
+      allGamesGroupedByPrice.listings = [id];
+      allListingsOfThisGame.allListings = [
+        getIdForGroupOfListings(event.params.gameId, event.params.price)
+      ];
+    } else {
+      allGamesGroupedByPrice.listings = allGamesGroupedByPrice.listings.concat([
+        id
+      ]);
+    }
+    allGamesGroupedByPrice.save();
+  }
+  allListingsOfThisGame.save();
 }
 
 function getIdFromEventParams(
@@ -74,4 +115,8 @@ function getIdFromEventParams(
   return (
     gameId.toString() + "-" + price.toString() + "-" + seller.toHexString()
   );
+}
+
+function getIdForGroupOfListings(gameId: BigInt, price: BigInt): string {
+  return gameId.toString() + "-" + price.toString();
 }
