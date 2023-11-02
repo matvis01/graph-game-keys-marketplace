@@ -21,14 +21,8 @@ type ItemListed @entity(immutable: false) {
   numOfItems: BigInt! # uint256
 }
 
-type AllGames @entity(immutable: false) {
+type ListingsByGame @entity(immutable: false) {
   id: ID!
   gameId: BigInt! # uint256
-  allListings: [AllGamesGroupedByPrice!]
-}
-
-type AllGamesGroupedByPrice @entity(immutable: false) {
-  id: ID!
-  price: BigInt! # address
-  listings: [ItemListed!]!
+  allListings: [ItemListed!]!
 }

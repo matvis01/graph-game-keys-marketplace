@@ -276,7 +276,7 @@ export class ItemListed extends Entity {
   }
 }
 
-export class AllGames extends Entity {
+export class ListingsByGame extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -284,22 +284,24 @@ export class AllGames extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save AllGames entity without an ID");
+    assert(id != null, "Cannot save ListingsByGame entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type AllGames must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type ListingsByGame must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("AllGames", id.toString(), this);
+      store.set("ListingsByGame", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): AllGames | null {
-    return changetype<AllGames | null>(store.get_in_block("AllGames", id));
+  static loadInBlock(id: string): ListingsByGame | null {
+    return changetype<ListingsByGame | null>(
+      store.get_in_block("ListingsByGame", id)
+    );
   }
 
-  static load(id: string): AllGames | null {
-    return changetype<AllGames | null>(store.get("AllGames", id));
+  static load(id: string): ListingsByGame | null {
+    return changetype<ListingsByGame | null>(store.get("ListingsByGame", id));
   }
 
   get id(): string {
@@ -328,59 +330,8 @@ export class AllGames extends Entity {
     this.set("gameId", Value.fromBigInt(value));
   }
 
-  get allListings(): Array<string> | null {
-    let value = this.get("allListings");
-    if (!value || value.kind == ValueKind.NULL) {
-      return null;
-    } else {
-      return value.toStringArray();
-    }
-  }
-
-  set allListings(value: Array<string> | null) {
-    if (!value) {
-      this.unset("allListings");
-    } else {
-      this.set("allListings", Value.fromStringArray(<Array<string>>value));
-    }
-  }
-}
-
-export class AllGamesGroupedByPrice extends Entity {
-  constructor(id: string) {
-    super();
-    this.set("id", Value.fromString(id));
-  }
-
-  save(): void {
-    let id = this.get("id");
-    assert(
-      id != null,
-      "Cannot save AllGamesGroupedByPrice entity without an ID"
-    );
-    if (id) {
-      assert(
-        id.kind == ValueKind.STRING,
-        `Entities of type AllGamesGroupedByPrice must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
-      );
-      store.set("AllGamesGroupedByPrice", id.toString(), this);
-    }
-  }
-
-  static loadInBlock(id: string): AllGamesGroupedByPrice | null {
-    return changetype<AllGamesGroupedByPrice | null>(
-      store.get_in_block("AllGamesGroupedByPrice", id)
-    );
-  }
-
-  static load(id: string): AllGamesGroupedByPrice | null {
-    return changetype<AllGamesGroupedByPrice | null>(
-      store.get("AllGamesGroupedByPrice", id)
-    );
-  }
-
-  get id(): string {
-    let value = this.get("id");
+  get name(): string {
+    let value = this.get("name");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -388,25 +339,12 @@ export class AllGamesGroupedByPrice extends Entity {
     }
   }
 
-  set id(value: string) {
-    this.set("id", Value.fromString(value));
+  set name(value: string) {
+    this.set("name", Value.fromString(value));
   }
 
-  get price(): BigInt {
-    let value = this.get("price");
-    if (!value || value.kind == ValueKind.NULL) {
-      throw new Error("Cannot return null for a required field.");
-    } else {
-      return value.toBigInt();
-    }
-  }
-
-  set price(value: BigInt) {
-    this.set("price", Value.fromBigInt(value));
-  }
-
-  get listings(): Array<string> {
-    let value = this.get("listings");
+  get allListings(): Array<string> {
+    let value = this.get("allListings");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -414,7 +352,7 @@ export class AllGamesGroupedByPrice extends Entity {
     }
   }
 
-  set listings(value: Array<string>) {
-    this.set("listings", Value.fromStringArray(value));
+  set allListings(value: Array<string>) {
+    this.set("allListings", Value.fromStringArray(value));
   }
 }

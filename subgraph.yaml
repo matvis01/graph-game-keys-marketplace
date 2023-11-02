@@ -17,6 +17,7 @@ dataSources:
         - ItemBought
         - ItemCancelled
         - ItemListed
+        - ListingsByGame
       abis:
         - name: GameKeyMarketplace
           file: ./abis/GameKeyMarketplace.json
