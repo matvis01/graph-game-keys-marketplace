@@ -31,8 +31,16 @@ export class ItemBought__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
+  get gameName(): string {
+    return this._event.parameters[2].value.toString();
+  }
+
+  get gameImage(): string {
+    return this._event.parameters[3].value.toString();
+  }
+
   get buyer(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[4].value.toAddress();
   }
 }
 
@@ -83,18 +91,34 @@ export class ItemListed__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
+  get gameName(): string {
+    return this._event.parameters[2].value.toString();
+  }
+
+  get gameImage(): string {
+    return this._event.parameters[3].value.toString();
+  }
+
   get seller(): Address {
-    return this._event.parameters[2].value.toAddress();
+    return this._event.parameters[4].value.toAddress();
   }
 }
 
 export class GameKeyMarketplace__getGamesBoughtResultValue0Struct extends ethereum.Tuple {
-  get gameId(): BigInt {
+  get id(): BigInt {
     return this[0].toBigInt();
   }
 
-  get gameKey(): string {
+  get key(): string {
     return this[1].toString();
+  }
+
+  get name(): string {
+    return this[2].toString();
+  }
+
+  get image(): string {
+    return this[3].toString();
   }
 }
 
@@ -123,7 +147,7 @@ export class GameKeyMarketplace extends ethereum.SmartContract {
   > {
     let result = super.call(
       "getGamesBought",
-      "getGamesBought():((uint256,string)[])",
+      "getGamesBought():((uint256,string,string,string)[])",
       []
     );
 
@@ -137,7 +161,7 @@ export class GameKeyMarketplace extends ethereum.SmartContract {
   > {
     let result = super.tryCall(
       "getGamesBought",
-      "getGamesBought():((uint256,string)[])",
+      "getGamesBought():((uint256,string,string,string)[])",
       []
     );
     if (result.reverted) {
@@ -174,6 +198,36 @@ export class ConstructorCall__Outputs {
   _call: ConstructorCall;
 
   constructor(call: ConstructorCall) {
+    this._call = call;
+  }
+}
+
+export class ChangeSellersPercentageCall extends ethereum.Call {
+  get inputs(): ChangeSellersPercentageCall__Inputs {
+    return new ChangeSellersPercentageCall__Inputs(this);
+  }
+
+  get outputs(): ChangeSellersPercentageCall__Outputs {
+    return new ChangeSellersPercentageCall__Outputs(this);
+  }
+}
+
+export class ChangeSellersPercentageCall__Inputs {
+  _call: ChangeSellersPercentageCall;
+
+  constructor(call: ChangeSellersPercentageCall) {
+    this._call = call;
+  }
+
+  get newPercentage(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class ChangeSellersPercentageCall__Outputs {
+  _call: ChangeSellersPercentageCall;
+
+  constructor(call: ChangeSellersPercentageCall) {
     this._call = call;
   }
 }
@@ -271,16 +325,14 @@ export class ListGameKeyCall__Inputs {
     this._call = call;
   }
 
-  get gameKey(): string {
-    return this._call.inputValues[0].value.toString();
-  }
-
-  get gameId(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  get game(): ListGameKeyCallGameStruct {
+    return changetype<ListGameKeyCallGameStruct>(
+      this._call.inputValues[0].value.toTuple()
+    );
   }
 
   get price(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
+    return this._call.inputValues[1].value.toBigInt();
   }
 }
 
@@ -289,6 +341,24 @@ export class ListGameKeyCall__Outputs {
 
   constructor(call: ListGameKeyCall) {
     this._call = call;
+  }
+}
+
+export class ListGameKeyCallGameStruct extends ethereum.Tuple {
+  get id(): BigInt {
+    return this[0].toBigInt();
+  }
+
+  get key(): string {
+    return this[1].toString();
+  }
+
+  get name(): string {
+    return this[2].toString();
+  }
+
+  get image(): string {
+    return this[3].toString();
   }
 }
 

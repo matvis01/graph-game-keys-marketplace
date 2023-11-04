@@ -24,5 +24,8 @@ type ItemListed @entity(immutable: false) {
 type ListingsByGame @entity(immutable: false) {
   id: ID!
   gameId: BigInt! # uint256
+  gameName: String!
+  gameImage: String!
+  numOfListings: BigInt! # uint256
   allListings: [ItemListed!]!
 }

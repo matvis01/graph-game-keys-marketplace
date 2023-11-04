@@ -330,8 +330,8 @@ export class ListingsByGame extends Entity {
     this.set("gameId", Value.fromBigInt(value));
   }
 
-  get name(): string {
-    let value = this.get("name");
+  get gameName(): string {
+    let value = this.get("gameName");
     if (!value || value.kind == ValueKind.NULL) {
       throw new Error("Cannot return null for a required field.");
     } else {
@@ -339,8 +339,34 @@ export class ListingsByGame extends Entity {
     }
   }
 
-  set name(value: string) {
-    this.set("name", Value.fromString(value));
+  set gameName(value: string) {
+    this.set("gameName", Value.fromString(value));
+  }
+
+  get gameImage(): string {
+    let value = this.get("gameImage");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set gameImage(value: string) {
+    this.set("gameImage", Value.fromString(value));
+  }
+
+  get numOfListings(): BigInt {
+    let value = this.get("numOfListings");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set numOfListings(value: BigInt) {
+    this.set("numOfListings", Value.fromBigInt(value));
   }
 
   get allListings(): Array<string> {

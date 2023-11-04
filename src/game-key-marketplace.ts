@@ -3,12 +3,7 @@ import {
   ItemCancelled as ItemCancelledEvent,
   ItemListed as ItemListedEvent
 } from "../generated/GameKeyMarketplace/GameKeyMarketplace"
-import {
-  ItemBought,
-  ItemCancelled,
-  ItemListed,
-  ListingsByGame
-} from "../generated/schema"
+import { ItemBought, ItemListed, ListingsByGame } from "../generated/schema"
 import { BigInt, Address } from "@graphprotocol/graph-ts"
 
 export function handleItemBought(event: ItemBoughtEvent): void {
@@ -42,6 +37,9 @@ export function handleItemBought(event: ItemBoughtEvent): void {
     listingsByGame.allListings = listingsByGame.allListings
       .slice(0, index)
       .concat(listingsByGame.allListings.slice(index + 1))
+    listingsByGame.numOfListings = listingsByGame.numOfListings.minus(
+      BigInt.fromI32(1)
+    )
     listingsByGame.save()
   }
 }
@@ -64,6 +62,9 @@ export function handleItemCancelled(event: ItemCancelledEvent): void {
     listingsByGame.allListings = listingsByGame.allListings
       .slice(0, index)
       .concat(listingsByGame.allListings.slice(index + 1))
+    listingsByGame.numOfListings = listingsByGame.numOfListings.minus(
+      BigInt.fromI32(1)
+    )
     listingsByGame.save()
   }
 }
@@ -91,8 +92,14 @@ export function handleItemListed(event: ItemListedEvent): void {
     listingsByGame = new ListingsByGame(event.params.gameId.toString())
     listingsByGame.gameId = event.params.gameId
     listingsByGame.allListings = [id]
+    listingsByGame.numOfListings = BigInt.fromI32(1)
+    listingsByGame.gameName = event.params.gameName
+    listingsByGame.gameImage = event.params.gameImage
   } else {
     listingsByGame.allListings = listingsByGame.allListings.concat([id])
+    listingsByGame.numOfListings = listingsByGame.numOfListings.plus(
+      BigInt.fromI32(1)
+    )
   }
   listingsByGame.save()
 }
