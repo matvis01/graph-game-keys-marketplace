@@ -99,8 +99,16 @@ export class ItemListed__Params {
     return this._event.parameters[3].value.toString();
   }
 
+  get tags(): Array<string> {
+    return this._event.parameters[4].value.toStringArray();
+  }
+
+  get genres(): Array<string> {
+    return this._event.parameters[5].value.toStringArray();
+  }
+
   get seller(): Address {
-    return this._event.parameters[4].value.toAddress();
+    return this._event.parameters[6].value.toAddress();
   }
 }
 
@@ -119,6 +127,14 @@ export class GameKeyMarketplace__getGamesBoughtResultValue0Struct extends ethere
 
   get image(): string {
     return this[3].toString();
+  }
+
+  get tags(): Array<string> {
+    return this[4].toStringArray();
+  }
+
+  get genres(): Array<string> {
+    return this[5].toStringArray();
   }
 }
 
@@ -147,7 +163,7 @@ export class GameKeyMarketplace extends ethereum.SmartContract {
   > {
     let result = super.call(
       "getGamesBought",
-      "getGamesBought():((uint256,string,string,string)[])",
+      "getGamesBought():((uint256,string,string,string,string[],string[])[])",
       []
     );
 
@@ -161,7 +177,7 @@ export class GameKeyMarketplace extends ethereum.SmartContract {
   > {
     let result = super.tryCall(
       "getGamesBought",
-      "getGamesBought():((uint256,string,string,string)[])",
+      "getGamesBought():((uint256,string,string,string,string[],string[])[])",
       []
     );
     if (result.reverted) {
@@ -359,6 +375,14 @@ export class ListGameKeyCallGameStruct extends ethereum.Tuple {
 
   get image(): string {
     return this[3].toString();
+  }
+
+  get tags(): Array<string> {
+    return this[4].toStringArray();
+  }
+
+  get genres(): Array<string> {
+    return this[5].toStringArray();
   }
 }
 

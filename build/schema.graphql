@@ -28,6 +28,8 @@ type ListingsByGame @entity(immutable: false) {
   gameName: String!
   gameImage: String!
   numOfListings: BigInt! # uint256
+  tags: [String!]
+  genres: [String!]
   allListings: [ItemListed!]!
 }
 
@@ -37,5 +39,7 @@ type ItemsBoughtByGame @entity(immutable: false) {
   gameName: String!
   gameImage: String!
   hasListings: Boolean!
+  tags: [String!]
+  genres: [String!]
   allItemsBought: [ItemBought!]!
 }

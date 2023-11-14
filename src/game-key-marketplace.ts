@@ -46,6 +46,8 @@ export function handleItemBought(event: ItemBoughtEvent): void {
     itemsBoughtByGame.gameName = listingsByGame.gameName
     itemsBoughtByGame.gameImage = listingsByGame.gameImage
     itemsBoughtByGame.allItemsBought = [id]
+    itemsBoughtByGame.genres = listingsByGame.genres
+    itemsBoughtByGame.tags = listingsByGame.tags
   } else {
     itemsBoughtByGame.allItemsBought.push(id)
   }
@@ -117,6 +119,8 @@ export function handleItemListed(event: ItemListedEvent): void {
     listingsByGame.numOfListings = BigInt.fromI32(1)
     listingsByGame.gameName = event.params.gameName
     listingsByGame.gameImage = event.params.gameImage
+    listingsByGame.tags = event.params.tags
+    listingsByGame.genres = event.params.genres
   } else {
     listingsByGame.allListings = listingsByGame.allListings.concat([id])
     listingsByGame.numOfListings = listingsByGame.numOfListings.plus(

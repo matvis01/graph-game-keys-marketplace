@@ -382,6 +382,40 @@ export class ListingsByGame extends Entity {
     this.set("numOfListings", Value.fromBigInt(value));
   }
 
+  get tags(): Array<string> | null {
+    let value = this.get("tags");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set tags(value: Array<string> | null) {
+    if (!value) {
+      this.unset("tags");
+    } else {
+      this.set("tags", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get genres(): Array<string> | null {
+    let value = this.get("genres");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set genres(value: Array<string> | null) {
+    if (!value) {
+      this.unset("genres");
+    } else {
+      this.set("genres", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
   get allListings(): Array<string> {
     let value = this.get("allListings");
     if (!value || value.kind == ValueKind.NULL) {
@@ -489,6 +523,40 @@ export class ItemsBoughtByGame extends Entity {
 
   set hasListings(value: boolean) {
     this.set("hasListings", Value.fromBoolean(value));
+  }
+
+  get tags(): Array<string> | null {
+    let value = this.get("tags");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set tags(value: Array<string> | null) {
+    if (!value) {
+      this.unset("tags");
+    } else {
+      this.set("tags", Value.fromStringArray(<Array<string>>value));
+    }
+  }
+
+  get genres(): Array<string> | null {
+    let value = this.get("genres");
+    if (!value || value.kind == ValueKind.NULL) {
+      return null;
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set genres(value: Array<string> | null) {
+    if (!value) {
+      this.unset("genres");
+    } else {
+      this.set("genres", Value.fromStringArray(<Array<string>>value));
+    }
   }
 
   get allItemsBought(): Array<string> {

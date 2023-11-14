@@ -130,6 +130,18 @@
         "type": "string"
       },
       {
+        "indexed": false,
+        "internalType": "string[]",
+        "name": "tags",
+        "type": "string[]"
+      },
+      {
+        "indexed": false,
+        "internalType": "string[]",
+        "name": "genres",
+        "type": "string[]"
+      },
+      {
         "indexed": true,
         "internalType": "address",
         "name": "seller",
@@ -237,6 +249,16 @@
             "internalType": "string",
             "name": "image",
             "type": "string"
+          },
+          {
+            "internalType": "string[]",
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "internalType": "string[]",
+            "name": "genres",
+            "type": "string[]"
           }
         ],
         "internalType": "struct GameKeyMarketplace.Game[]",
@@ -270,6 +292,16 @@
             "internalType": "string",
             "name": "image",
             "type": "string"
+          },
+          {
+            "internalType": "string[]",
+            "name": "tags",
+            "type": "string[]"
+          },
+          {
+            "internalType": "string[]",
+            "name": "genres",
+            "type": "string[]"
           }
         ],
         "internalType": "struct GameKeyMarketplace.Game",
