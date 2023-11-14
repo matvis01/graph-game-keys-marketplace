@@ -3,7 +3,12 @@ import {
   ItemCancelled as ItemCancelledEvent,
   ItemListed as ItemListedEvent
 } from "../generated/GameKeyMarketplace/GameKeyMarketplace"
-import { ItemBought, ItemListed, ListingsByGame } from "../generated/schema"
+import {
+  ItemBought,
+  ItemListed,
+  ListingsByGame,
+  ItemsBoughtByGame
+} from "../generated/schema"
 import { BigInt, Address } from "@graphprotocol/graph-ts"
 
 export function handleItemBought(event: ItemBoughtEvent): void {
@@ -20,6 +25,7 @@ export function handleItemBought(event: ItemBoughtEvent): void {
     itemBought.gameId = event.params.gameId
     itemBought.price = event.params.price
     itemBought.buyer = event.params.buyer
+    itemBought.date = event.block.timestamp
     itemBought.numOfItems = BigInt.fromI32(1)
   } else {
     itemBought.numOfItems = itemBought.numOfItems.plus(BigInt.fromI32(1))
@@ -30,18 +36,34 @@ export function handleItemBought(event: ItemBoughtEvent): void {
     itemListed.numOfItems = itemListed.numOfItems.minus(BigInt.fromI32(1))
     itemListed.save()
   }
-
   let listingsByGame = ListingsByGame.load(event.params.gameId.toString())
-  if (listingsByGame) {
-    let index = listingsByGame.allListings.indexOf(id)
-    listingsByGame.allListings = listingsByGame.allListings
-      .slice(0, index)
-      .concat(listingsByGame.allListings.slice(index + 1))
-    listingsByGame.numOfListings = listingsByGame.numOfListings.minus(
-      BigInt.fromI32(1)
-    )
-    listingsByGame.save()
+  if (!listingsByGame) return
+
+  let itemsBoughtByGame = ItemsBoughtByGame.load(event.params.gameId.toString())
+  if (!itemsBoughtByGame) {
+    itemsBoughtByGame = new ItemsBoughtByGame(event.params.gameId.toString())
+    itemsBoughtByGame.gameId = event.params.gameId
+    itemsBoughtByGame.gameName = listingsByGame.gameName
+    itemsBoughtByGame.gameImage = listingsByGame.gameImage
+    itemsBoughtByGame.allItemsBought = [id]
+  } else {
+    itemsBoughtByGame.allItemsBought.push(id)
   }
+  itemsBoughtByGame.hasListings = listingsByGame.numOfListings.gt(
+    BigInt.fromI32(2)
+  )
+  itemsBoughtByGame.save()
+
+  let indexOfListed = listingsByGame.allListings.indexOf(id)
+  if (indexOfListed == -1) return
+
+  listingsByGame.allListings = listingsByGame.allListings
+    .slice(0, indexOfListed)
+    .concat(listingsByGame.allListings.slice(indexOfListed + 1))
+  listingsByGame.numOfListings = listingsByGame.numOfListings.minus(
+    BigInt.fromI32(1)
+  )
+  listingsByGame.save()
 }
 
 export function handleItemCancelled(event: ItemCancelledEvent): void {

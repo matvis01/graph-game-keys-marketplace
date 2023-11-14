@@ -89,6 +89,19 @@ export class ItemBought extends Entity {
     this.set("buyer", Value.fromBytes(value));
   }
 
+  get date(): BigInt {
+    let value = this.get("date");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set date(value: BigInt) {
+    this.set("date", Value.fromBigInt(value));
+  }
+
   get numOfItems(): BigInt {
     let value = this.get("numOfItems");
     if (!value || value.kind == ValueKind.NULL) {
@@ -380,5 +393,114 @@ export class ListingsByGame extends Entity {
 
   set allListings(value: Array<string>) {
     this.set("allListings", Value.fromStringArray(value));
+  }
+}
+
+export class ItemsBoughtByGame extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save ItemsBoughtByGame entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type ItemsBoughtByGame must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("ItemsBoughtByGame", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): ItemsBoughtByGame | null {
+    return changetype<ItemsBoughtByGame | null>(
+      store.get_in_block("ItemsBoughtByGame", id)
+    );
+  }
+
+  static load(id: string): ItemsBoughtByGame | null {
+    return changetype<ItemsBoughtByGame | null>(
+      store.get("ItemsBoughtByGame", id)
+    );
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get gameId(): BigInt {
+    let value = this.get("gameId");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set gameId(value: BigInt) {
+    this.set("gameId", Value.fromBigInt(value));
+  }
+
+  get gameName(): string {
+    let value = this.get("gameName");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set gameName(value: string) {
+    this.set("gameName", Value.fromString(value));
+  }
+
+  get gameImage(): string {
+    let value = this.get("gameImage");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set gameImage(value: string) {
+    this.set("gameImage", Value.fromString(value));
+  }
+
+  get hasListings(): boolean {
+    let value = this.get("hasListings");
+    if (!value || value.kind == ValueKind.NULL) {
+      return false;
+    } else {
+      return value.toBoolean();
+    }
+  }
+
+  set hasListings(value: boolean) {
+    this.set("hasListings", Value.fromBoolean(value));
+  }
+
+  get allItemsBought(): Array<string> {
+    let value = this.get("allItemsBought");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set allItemsBought(value: Array<string>) {
+    this.set("allItemsBought", Value.fromStringArray(value));
   }
 }
