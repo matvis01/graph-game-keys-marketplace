@@ -8,7 +8,7 @@ dataSources:
     source:
       address: "0x1EeBac6636fCEd828A9b23c98B9C13D84843F14c"
       abi: GameKeyMarketplace
-      startBlock: 4693368
+      startBlock: 4700760
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7

@@ -7,7 +7,8 @@ import {
   ItemBought,
   ItemListed,
   ListingsByGame,
-  ItemsBoughtByGame
+  ItemsBoughtByGame,
+  Filters
 } from "../generated/schema"
 import { BigInt, Address } from "@graphprotocol/graph-ts"
 
@@ -52,7 +53,7 @@ export function handleItemBought(event: ItemBoughtEvent): void {
     itemsBoughtByGame.allItemsBought.push(id)
   }
   itemsBoughtByGame.hasListings = listingsByGame.numOfListings.gt(
-    BigInt.fromI32(2)
+    BigInt.fromI32(1)
   )
   itemsBoughtByGame.save()
 
@@ -128,6 +129,25 @@ export function handleItemListed(event: ItemListedEvent): void {
     )
   }
   listingsByGame.save()
+
+  let itemsBoughtByGame = ItemsBoughtByGame.load(event.params.gameId.toString())
+  if (itemsBoughtByGame) {
+    itemsBoughtByGame.hasListings = true
+    itemsBoughtByGame.save()
+  }
+
+  let filters = Filters.load("filters")
+  if (!filters) {
+    filters = new Filters("filters")
+    filters.genres = event.params.genres || []
+    filters.tags = event.params.tags || []
+  } else if (filters !== null) {
+    if (event.params.genres) {
+      filters.genres = addWithoutDuplicates(filters.genres, event.params.genres)
+      filters.tags = addWithoutDuplicates(filters.tags, event.params.tags)
+    }
+  }
+  filters.save()
 }
 
 function getIdFromEventParams(
@@ -136,4 +156,23 @@ function getIdFromEventParams(
   seller: Address
 ): string {
   return gameId.toString() + "-" + price.toString() + "-" + seller.toHexString()
+}
+
+function addWithoutDuplicates(
+  existingArray: string[],
+  newElements: string[]
+): string[] {
+  for (let i = 0; i < newElements.length; i++) {
+    let isDuplicate = false
+    for (let j = 0; j < existingArray.length; j++) {
+      if (existingArray[j] === newElements[i]) {
+        isDuplicate = true
+        break
+      }
+    }
+    if (!isDuplicate) {
+      existingArray.push(newElements[i])
+    }
+  }
+  return existingArray
 }

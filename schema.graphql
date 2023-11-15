@@ -43,3 +43,9 @@ type ItemsBoughtByGame @entity(immutable: false) {
   genres: [String!]
   allItemsBought: [ItemBought!]!
 }
+
+type Filters @entity(immutable: false) {
+  id: ID!
+  tags: [String!]!
+  genres: [String!]!
+}

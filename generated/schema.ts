@@ -572,3 +572,69 @@ export class ItemsBoughtByGame extends Entity {
     this.set("allItemsBought", Value.fromStringArray(value));
   }
 }
+
+export class Filters extends Entity {
+  constructor(id: string) {
+    super();
+    this.set("id", Value.fromString(id));
+  }
+
+  save(): void {
+    let id = this.get("id");
+    assert(id != null, "Cannot save Filters entity without an ID");
+    if (id) {
+      assert(
+        id.kind == ValueKind.STRING,
+        `Entities of type Filters must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+      );
+      store.set("Filters", id.toString(), this);
+    }
+  }
+
+  static loadInBlock(id: string): Filters | null {
+    return changetype<Filters | null>(store.get_in_block("Filters", id));
+  }
+
+  static load(id: string): Filters | null {
+    return changetype<Filters | null>(store.get("Filters", id));
+  }
+
+  get id(): string {
+    let value = this.get("id");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toString();
+    }
+  }
+
+  set id(value: string) {
+    this.set("id", Value.fromString(value));
+  }
+
+  get tags(): Array<string> {
+    let value = this.get("tags");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set tags(value: Array<string>) {
+    this.set("tags", Value.fromStringArray(value));
+  }
+
+  get genres(): Array<string> {
+    let value = this.get("genres");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toStringArray();
+    }
+  }
+
+  set genres(value: Array<string>) {
+    this.set("genres", Value.fromStringArray(value));
+  }
+}
