@@ -30,6 +30,7 @@ type ListingsByGame @entity(immutable: false) {
   numOfListings: BigInt! # uint256
   tags: [String!]
   genres: [String!]
+  latestDate: BigInt! # uint256
   allListings: [ItemListed!]!
 }
 
@@ -44,7 +45,7 @@ type ItemsBoughtByGame @entity(immutable: false) {
   allItemsBought: [ItemBought!]!
 }
 
-type Filters @entity(immutable: false) {
+type AllFilter @entity(immutable: false) {
   id: ID!
   tags: [String!]!
   genres: [String!]!

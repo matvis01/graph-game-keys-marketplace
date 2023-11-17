@@ -416,6 +416,19 @@ export class ListingsByGame extends Entity {
     }
   }
 
+  get latestDate(): BigInt {
+    let value = this.get("latestDate");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set latestDate(value: BigInt) {
+    this.set("latestDate", Value.fromBigInt(value));
+  }
+
   get allListings(): Array<string> {
     let value = this.get("allListings");
     if (!value || value.kind == ValueKind.NULL) {
@@ -573,7 +586,7 @@ export class ItemsBoughtByGame extends Entity {
   }
 }
 
-export class Filters extends Entity {
+export class AllFilter extends Entity {
   constructor(id: string) {
     super();
     this.set("id", Value.fromString(id));
@@ -581,22 +594,22 @@ export class Filters extends Entity {
 
   save(): void {
     let id = this.get("id");
-    assert(id != null, "Cannot save Filters entity without an ID");
+    assert(id != null, "Cannot save AllFilter entity without an ID");
     if (id) {
       assert(
         id.kind == ValueKind.STRING,
-        `Entities of type Filters must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
+        `Entities of type AllFilter must have an ID of type String but the id '${id.displayData()}' is of type ${id.displayKind()}`
       );
-      store.set("Filters", id.toString(), this);
+      store.set("AllFilter", id.toString(), this);
     }
   }
 
-  static loadInBlock(id: string): Filters | null {
-    return changetype<Filters | null>(store.get_in_block("Filters", id));
+  static loadInBlock(id: string): AllFilter | null {
+    return changetype<AllFilter | null>(store.get_in_block("AllFilter", id));
   }
 
-  static load(id: string): Filters | null {
-    return changetype<Filters | null>(store.get("Filters", id));
+  static load(id: string): AllFilter | null {
+    return changetype<AllFilter | null>(store.get("AllFilter", id));
   }
 
   get id(): string {

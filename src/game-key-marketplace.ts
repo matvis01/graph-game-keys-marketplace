@@ -8,7 +8,7 @@ import {
   ItemListed,
   ListingsByGame,
   ItemsBoughtByGame,
-  Filters
+  AllFilter as Filters
 } from "../generated/schema"
 import { BigInt, Address } from "@graphprotocol/graph-ts"
 
@@ -128,6 +128,7 @@ export function handleItemListed(event: ItemListedEvent): void {
       BigInt.fromI32(1)
     )
   }
+  listingsByGame.latestDate = event.block.timestamp
   listingsByGame.save()
 
   let itemsBoughtByGame = ItemsBoughtByGame.load(event.params.gameId.toString())
@@ -141,11 +142,9 @@ export function handleItemListed(event: ItemListedEvent): void {
     filters = new Filters("filters")
     filters.genres = event.params.genres || []
     filters.tags = event.params.tags || []
-  } else if (filters !== null) {
-    if (event.params.genres) {
-      filters.genres = addWithoutDuplicates(filters.genres, event.params.genres)
-      filters.tags = addWithoutDuplicates(filters.tags, event.params.tags)
-    }
+  } else {
+    filters.genres = addWithoutDuplicates(filters.genres, event.params.genres)
+    filters.tags = addWithoutDuplicates(filters.tags, event.params.tags)
   }
   filters.save()
 }
