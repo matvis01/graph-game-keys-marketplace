@@ -27,12 +27,12 @@
   },
   {
     "inputs": [],
-    "name": "PercetageCantBeAbove100",
+    "name": "OnlyOwnerCanCancelListing",
     "type": "error"
   },
   {
     "inputs": [],
-    "name": "PriceMustBeAboveZero",
+    "name": "PercetageCantBeAbove100",
     "type": "error"
   },
   {
@@ -56,18 +56,6 @@
         "type": "uint256"
       },
       {
-        "indexed": false,
-        "internalType": "string",
-        "name": "gameName",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "gameImage",
-        "type": "string"
-      },
-      {
         "indexed": true,
         "internalType": "address",
         "name": "buyer",
@@ -82,21 +70,9 @@
     "inputs": [
       {
         "indexed": true,
-        "internalType": "uint256",
+        "internalType": "string",
         "name": "gameId",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
-      },
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "seller",
-        "type": "address"
+        "type": "string"
       }
     ],
     "name": "ItemCancelled",
@@ -167,6 +143,11 @@
   {
     "inputs": [
       {
+        "internalType": "string",
+        "name": "listingId",
+        "type": "string"
+      },
+      {
         "internalType": "uint256",
         "name": "gameId",
         "type": "uint256"
@@ -183,27 +164,16 @@
       }
     ],
     "name": "buyGameKey",
-    "outputs": [
-      {
-        "internalType": "string",
-        "name": "",
-        "type": "string"
-      }
-    ],
+    "outputs": [],
     "stateMutability": "payable",
     "type": "function"
   },
   {
     "inputs": [
       {
-        "internalType": "uint256",
-        "name": "gameId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
+        "internalType": "string",
+        "name": "listingId",
+        "type": "string"
       }
     ],
     "name": "cancelListing",
@@ -232,36 +202,16 @@
         "components": [
           {
             "internalType": "uint256",
-            "name": "id",
+            "name": "gameId",
             "type": "uint256"
           },
           {
             "internalType": "string",
             "name": "key",
             "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "name",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "image",
-            "type": "string"
-          },
-          {
-            "internalType": "string[]",
-            "name": "tags",
-            "type": "string[]"
-          },
-          {
-            "internalType": "string[]",
-            "name": "genres",
-            "type": "string[]"
           }
         ],
-        "internalType": "struct GameKeyMarketplace.Game[]",
+        "internalType": "struct GameKeyMarketplace.BoughtGame[]",
         "name": "",
         "type": "tuple[]"
       }
@@ -277,11 +227,6 @@
             "internalType": "uint256",
             "name": "id",
             "type": "uint256"
-          },
-          {
-            "internalType": "string",
-            "name": "key",
-            "type": "string"
           },
           {
             "internalType": "string",
@@ -309,35 +254,22 @@
         "type": "tuple"
       },
       {
+        "internalType": "string",
+        "name": "listingId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "key",
+        "type": "string"
+      },
+      {
         "internalType": "uint256",
         "name": "price",
         "type": "uint256"
       }
     ],
     "name": "listGameKey",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "gameId",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "price",
-        "type": "uint256"
-      },
-      {
-        "internalType": "uint256",
-        "name": "newPrice",
-        "type": "uint256"
-      }
-    ],
-    "name": "updateListing",
     "outputs": [],
     "stateMutability": "nonpayable",
     "type": "function"

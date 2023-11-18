@@ -27,6 +27,7 @@ export function handleItemBought(event: ItemBoughtEvent): void {
     itemBought.price = event.params.price
     itemBought.buyer = event.params.buyer
     itemBought.date = event.block.timestamp
+
     itemBought.numOfItems = BigInt.fromI32(1)
   } else {
     itemBought.numOfItems = itemBought.numOfItems.plus(BigInt.fromI32(1))
@@ -70,11 +71,7 @@ export function handleItemBought(event: ItemBoughtEvent): void {
 }
 
 export function handleItemCancelled(event: ItemCancelledEvent): void {
-  let id = getIdFromEventParams(
-    event.params.gameId,
-    event.params.price,
-    event.params.seller
-  )
+  let id = event.params.gameId.toString()
   let itemCancelled = ItemListed.load(id)
   if (itemCancelled) {
     itemCancelled.numOfItems = itemCancelled.numOfItems.minus(BigInt.fromI32(1))

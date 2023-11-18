@@ -31,16 +31,8 @@ export class ItemBought__Params {
     return this._event.parameters[1].value.toBigInt();
   }
 
-  get gameName(): string {
-    return this._event.parameters[2].value.toString();
-  }
-
-  get gameImage(): string {
-    return this._event.parameters[3].value.toString();
-  }
-
   get buyer(): Address {
-    return this._event.parameters[4].value.toAddress();
+    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -57,16 +49,8 @@ export class ItemCancelled__Params {
     this._event = event;
   }
 
-  get gameId(): BigInt {
-    return this._event.parameters[0].value.toBigInt();
-  }
-
-  get price(): BigInt {
-    return this._event.parameters[1].value.toBigInt();
-  }
-
-  get seller(): Address {
-    return this._event.parameters[2].value.toAddress();
+  get gameId(): Bytes {
+    return this._event.parameters[0].value.toBytes();
   }
 }
 
@@ -113,28 +97,12 @@ export class ItemListed__Params {
 }
 
 export class GameKeyMarketplace__getGamesBoughtResultValue0Struct extends ethereum.Tuple {
-  get id(): BigInt {
+  get gameId(): BigInt {
     return this[0].toBigInt();
   }
 
   get key(): string {
     return this[1].toString();
-  }
-
-  get name(): string {
-    return this[2].toString();
-  }
-
-  get image(): string {
-    return this[3].toString();
-  }
-
-  get tags(): Array<string> {
-    return this[4].toStringArray();
-  }
-
-  get genres(): Array<string> {
-    return this[5].toStringArray();
   }
 }
 
@@ -163,7 +131,7 @@ export class GameKeyMarketplace extends ethereum.SmartContract {
   > {
     let result = super.call(
       "getGamesBought",
-      "getGamesBought():((uint256,string,string,string,string[],string[])[])",
+      "getGamesBought():((uint256,string)[])",
       []
     );
 
@@ -177,7 +145,7 @@ export class GameKeyMarketplace extends ethereum.SmartContract {
   > {
     let result = super.tryCall(
       "getGamesBought",
-      "getGamesBought():((uint256,string,string,string,string[],string[])[])",
+      "getGamesBought():((uint256,string)[])",
       []
     );
     if (result.reverted) {
@@ -265,16 +233,20 @@ export class BuyGameKeyCall__Inputs {
     this._call = call;
   }
 
+  get listingId(): string {
+    return this._call.inputValues[0].value.toString();
+  }
+
   get gameId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
+    return this._call.inputValues[1].value.toBigInt();
   }
 
   get seller(): Address {
-    return this._call.inputValues[1].value.toAddress();
+    return this._call.inputValues[2].value.toAddress();
   }
 
   get price(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
+    return this._call.inputValues[3].value.toBigInt();
   }
 }
 
@@ -283,10 +255,6 @@ export class BuyGameKeyCall__Outputs {
 
   constructor(call: BuyGameKeyCall) {
     this._call = call;
-  }
-
-  get value0(): string {
-    return this._call.outputValues[0].value.toString();
   }
 }
 
@@ -307,12 +275,8 @@ export class CancelListingCall__Inputs {
     this._call = call;
   }
 
-  get gameId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get price(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+  get listingId(): string {
+    return this._call.inputValues[0].value.toString();
   }
 }
 
@@ -347,8 +311,16 @@ export class ListGameKeyCall__Inputs {
     );
   }
 
+  get listingId(): string {
+    return this._call.inputValues[1].value.toString();
+  }
+
+  get key(): string {
+    return this._call.inputValues[2].value.toString();
+  }
+
   get price(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
+    return this._call.inputValues[3].value.toBigInt();
   }
 }
 
@@ -365,62 +337,20 @@ export class ListGameKeyCallGameStruct extends ethereum.Tuple {
     return this[0].toBigInt();
   }
 
-  get key(): string {
+  get name(): string {
     return this[1].toString();
   }
 
-  get name(): string {
+  get image(): string {
     return this[2].toString();
   }
 
-  get image(): string {
-    return this[3].toString();
-  }
-
   get tags(): Array<string> {
-    return this[4].toStringArray();
+    return this[3].toStringArray();
   }
 
   get genres(): Array<string> {
-    return this[5].toStringArray();
-  }
-}
-
-export class UpdateListingCall extends ethereum.Call {
-  get inputs(): UpdateListingCall__Inputs {
-    return new UpdateListingCall__Inputs(this);
-  }
-
-  get outputs(): UpdateListingCall__Outputs {
-    return new UpdateListingCall__Outputs(this);
-  }
-}
-
-export class UpdateListingCall__Inputs {
-  _call: UpdateListingCall;
-
-  constructor(call: UpdateListingCall) {
-    this._call = call;
-  }
-
-  get gameId(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-
-  get price(): BigInt {
-    return this._call.inputValues[1].value.toBigInt();
-  }
-
-  get newPrice(): BigInt {
-    return this._call.inputValues[2].value.toBigInt();
-  }
-}
-
-export class UpdateListingCall__Outputs {
-  _call: UpdateListingCall;
-
-  constructor(call: UpdateListingCall) {
-    this._call = call;
+    return this[4].toStringArray();
   }
 }
 
