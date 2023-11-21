@@ -119,6 +119,7 @@ export function handleItemListed(event: ItemListedEvent): void {
     listingsByGame.gameImage = event.params.gameImage
     listingsByGame.tags = event.params.tags
     listingsByGame.genres = event.params.genres
+    listingsByGame.rating = event.params.rating
   } else {
     listingsByGame.allListings = listingsByGame.allListings.concat([id])
     listingsByGame.numOfListings = listingsByGame.numOfListings.plus(

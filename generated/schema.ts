@@ -429,6 +429,19 @@ export class ListingsByGame extends Entity {
     this.set("latestDate", Value.fromBigInt(value));
   }
 
+  get rating(): BigInt {
+    let value = this.get("rating");
+    if (!value || value.kind == ValueKind.NULL) {
+      throw new Error("Cannot return null for a required field.");
+    } else {
+      return value.toBigInt();
+    }
+  }
+
+  set rating(value: BigInt) {
+    this.set("rating", Value.fromBigInt(value));
+  }
+
   get allListings(): Array<string> {
     let value = this.get("allListings");
     if (!value || value.kind == ValueKind.NULL) {

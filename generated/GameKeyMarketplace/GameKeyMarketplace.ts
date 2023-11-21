@@ -91,8 +91,12 @@ export class ItemListed__Params {
     return this._event.parameters[5].value.toStringArray();
   }
 
+  get rating(): BigInt {
+    return this._event.parameters[6].value.toBigInt();
+  }
+
   get seller(): Address {
-    return this._event.parameters[6].value.toAddress();
+    return this._event.parameters[7].value.toAddress();
   }
 }
 
@@ -345,12 +349,16 @@ export class ListGameKeyCallGameStruct extends ethereum.Tuple {
     return this[2].toString();
   }
 
+  get rating(): BigInt {
+    return this[3].toBigInt();
+  }
+
   get tags(): Array<string> {
-    return this[3].toStringArray();
+    return this[4].toStringArray();
   }
 
   get genres(): Array<string> {
-    return this[4].toStringArray();
+    return this[5].toStringArray();
   }
 }
 
