@@ -8,7 +8,8 @@ import {
   ItemListed,
   ListingsByGame,
   ItemsBoughtByGame,
-  AllFilter as Filters
+  Genre,
+  Tag
 } from "../generated/schema"
 import { BigInt, Address } from "@graphprotocol/graph-ts"
 
@@ -41,6 +42,9 @@ export function handleItemBought(event: ItemBoughtEvent): void {
   let listingsByGame = ListingsByGame.load(event.params.gameId.toString())
   if (!listingsByGame) return
 
+  let tags = listingsByGame.tags
+  let genres = listingsByGame.genres
+
   let itemsBoughtByGame = ItemsBoughtByGame.load(event.params.gameId.toString())
   if (!itemsBoughtByGame) {
     itemsBoughtByGame = new ItemsBoughtByGame(event.params.gameId.toString())
@@ -51,7 +55,7 @@ export function handleItemBought(event: ItemBoughtEvent): void {
     itemsBoughtByGame.genres = listingsByGame.genres
     itemsBoughtByGame.tags = listingsByGame.tags
   } else {
-    itemsBoughtByGame.allItemsBought.push(id)
+    itemsBoughtByGame.allItemsBought.concat([id])
   }
   itemsBoughtByGame.hasListings = listingsByGame.numOfListings.gt(
     BigInt.fromI32(1)
@@ -68,6 +72,26 @@ export function handleItemBought(event: ItemBoughtEvent): void {
     BigInt.fromI32(1)
   )
   listingsByGame.save()
+
+  if (!tags) return
+  tags.forEach((tag: string) => {
+    let tagEntity = Tag.load(tag)
+    if (tagEntity) {
+      tagEntity.numberOfGames = tagEntity.numberOfGames.minus(BigInt.fromI32(1))
+      tagEntity.save()
+    }
+  })
+
+  if (!genres) return
+  genres.forEach((genre: string) => {
+    let genreEntity = Genre.load(genre)
+    if (genreEntity) {
+      genreEntity.numberOfGames = genreEntity.numberOfGames.minus(
+        BigInt.fromI32(1)
+      )
+      genreEntity.save()
+    }
+  })
 }
 
 export function handleItemCancelled(event: ItemCancelledEvent): void {
@@ -135,16 +159,31 @@ export function handleItemListed(event: ItemListedEvent): void {
     itemsBoughtByGame.save()
   }
 
-  let filters = Filters.load("filters")
-  if (!filters) {
-    filters = new Filters("filters")
-    filters.genres = event.params.genres || []
-    filters.tags = event.params.tags || []
-  } else {
-    filters.genres = addWithoutDuplicates(filters.genres, event.params.genres)
-    filters.tags = addWithoutDuplicates(filters.tags, event.params.tags)
-  }
-  filters.save()
+  event.params.genres.forEach((genre: string) => {
+    let genreEntity = Genre.load(genre)
+    if (!genreEntity) {
+      genreEntity = new Genre(genre)
+      genreEntity.name = genre
+      genreEntity.numberOfGames = BigInt.fromI32(1)
+    } else {
+      genreEntity.numberOfGames = genreEntity.numberOfGames.plus(
+        BigInt.fromI32(1)
+      )
+    }
+    genreEntity.save()
+  })
+
+  event.params.tags.forEach((tag: string) => {
+    let tagEntity = Tag.load(tag)
+    if (!tagEntity || tagEntity.numberOfGames == BigInt.fromI32(0)) {
+      tagEntity = new Tag(tag)
+      tagEntity.name = tag
+      tagEntity.numberOfGames = BigInt.fromI32(1)
+    } else {
+      tagEntity.numberOfGames = tagEntity.numberOfGames.plus(BigInt.fromI32(1))
+    }
+    tagEntity.save()
+  })
 }
 
 function getIdFromEventParams(
@@ -153,23 +192,4 @@ function getIdFromEventParams(
   seller: Address
 ): string {
   return gameId.toString() + "-" + price.toString() + "-" + seller.toHexString()
-}
-
-function addWithoutDuplicates(
-  existingArray: string[],
-  newElements: string[]
-): string[] {
-  for (let i = 0; i < newElements.length; i++) {
-    let isDuplicate = false
-    for (let j = 0; j < existingArray.length; j++) {
-      if (existingArray[j] === newElements[i]) {
-        isDuplicate = true
-        break
-      }
-    }
-    if (!isDuplicate) {
-      existingArray.push(newElements[i])
-    }
-  }
-  return existingArray
 }
