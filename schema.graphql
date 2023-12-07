@@ -7,13 +7,6 @@ type ItemBought @entity(immutable: false) {
   numOfItems: BigInt! # uint256
 }
 
-type ItemCancelled @entity(immutable: true) {
-  id: ID!
-  gameId: BigInt! # uint256
-  price: BigInt! # uint256
-  seller: Bytes! # address
-}
-
 type ItemListed @entity(immutable: false) {
   id: ID!
   gameId: BigInt! # uint256
@@ -28,6 +21,7 @@ type ListingsByGame @entity(immutable: false) {
   gameName: String!
   gameImage: String!
   numOfListings: BigInt! # uint256
+  numOfSoldItems: BigInt! # uint256
   tags: [String!]
   genres: [String!]
   latestDate: BigInt! # uint256

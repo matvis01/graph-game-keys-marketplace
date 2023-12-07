@@ -100,6 +100,24 @@ export class ItemListed__Params {
   }
 }
 
+export class SellersPercentageChanged extends ethereum.Event {
+  get params(): SellersPercentageChanged__Params {
+    return new SellersPercentageChanged__Params(this);
+  }
+}
+
+export class SellersPercentageChanged__Params {
+  _event: SellersPercentageChanged;
+
+  constructor(event: SellersPercentageChanged) {
+    this._event = event;
+  }
+
+  get newPercentage(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+}
+
 export class GameKeyMarketplace__getGamesBoughtResultValue0Struct extends ethereum.Tuple {
   get gameId(): BigInt {
     return this[0].toBigInt();
@@ -190,36 +208,6 @@ export class ConstructorCall__Outputs {
   }
 }
 
-export class ChangeSellersPercentageCall extends ethereum.Call {
-  get inputs(): ChangeSellersPercentageCall__Inputs {
-    return new ChangeSellersPercentageCall__Inputs(this);
-  }
-
-  get outputs(): ChangeSellersPercentageCall__Outputs {
-    return new ChangeSellersPercentageCall__Outputs(this);
-  }
-}
-
-export class ChangeSellersPercentageCall__Inputs {
-  _call: ChangeSellersPercentageCall;
-
-  constructor(call: ChangeSellersPercentageCall) {
-    this._call = call;
-  }
-
-  get newPercentage(): BigInt {
-    return this._call.inputValues[0].value.toBigInt();
-  }
-}
-
-export class ChangeSellersPercentageCall__Outputs {
-  _call: ChangeSellersPercentageCall;
-
-  constructor(call: ChangeSellersPercentageCall) {
-    this._call = call;
-  }
-}
-
 export class BuyGameKeyCall extends ethereum.Call {
   get inputs(): BuyGameKeyCall__Inputs {
     return new BuyGameKeyCall__Inputs(this);
@@ -288,6 +276,36 @@ export class CancelListingCall__Outputs {
   _call: CancelListingCall;
 
   constructor(call: CancelListingCall) {
+    this._call = call;
+  }
+}
+
+export class ChangeSellersPercentageCall extends ethereum.Call {
+  get inputs(): ChangeSellersPercentageCall__Inputs {
+    return new ChangeSellersPercentageCall__Inputs(this);
+  }
+
+  get outputs(): ChangeSellersPercentageCall__Outputs {
+    return new ChangeSellersPercentageCall__Outputs(this);
+  }
+}
+
+export class ChangeSellersPercentageCall__Inputs {
+  _call: ChangeSellersPercentageCall;
+
+  constructor(call: ChangeSellersPercentageCall) {
+    this._call = call;
+  }
+
+  get newPercentage(): BigInt {
+    return this._call.inputValues[0].value.toBigInt();
+  }
+}
+
+export class ChangeSellersPercentageCall__Outputs {
+  _call: ChangeSellersPercentageCall;
+
+  constructor(call: ChangeSellersPercentageCall) {
     this._call = call;
   }
 }

@@ -71,6 +71,9 @@ export function handleItemBought(event: ItemBoughtEvent): void {
   listingsByGame.numOfListings = listingsByGame.numOfListings.minus(
     BigInt.fromI32(1)
   )
+  listingsByGame.numOfSoldItems = listingsByGame.numOfSoldItems.plus(
+    BigInt.fromI32(1)
+  )
   listingsByGame.save()
 
   if (!tags) return
@@ -96,13 +99,11 @@ export function handleItemBought(event: ItemBoughtEvent): void {
 
 export function handleItemCancelled(event: ItemCancelledEvent): void {
   let id = event.params.gameId.toString()
-  let itemCancelled = ItemListed.load(id)
-  if (itemCancelled) {
-    itemCancelled.numOfItems = itemCancelled.numOfItems.minus(BigInt.fromI32(1))
-    itemCancelled.save()
-  }
 
-  let listingsByGame = ListingsByGame.load(event.params.gameId.toString())
+  let gameId = event.params.gameId.toString().split("-")[0]
+
+  let listingsByGame = ListingsByGame.load(gameId)
+
   if (listingsByGame) {
     let index = listingsByGame.allListings.indexOf(id)
     listingsByGame.allListings = listingsByGame.allListings
@@ -111,7 +112,14 @@ export function handleItemCancelled(event: ItemCancelledEvent): void {
     listingsByGame.numOfListings = listingsByGame.numOfListings.minus(
       BigInt.fromI32(1)
     )
+
     listingsByGame.save()
+  }
+
+  let itemListed = ItemListed.load(id)
+  if (itemListed) {
+    itemListed.numOfItems = itemListed.numOfItems.minus(BigInt.fromI32(1))
+    itemListed.save()
   }
 }
 
@@ -144,6 +152,7 @@ export function handleItemListed(event: ItemListedEvent): void {
     listingsByGame.tags = event.params.tags
     listingsByGame.genres = event.params.genres
     listingsByGame.rating = event.params.rating
+    listingsByGame.numOfSoldItems = BigInt.fromI32(0)
   } else {
     listingsByGame.allListings = listingsByGame.allListings.concat([id])
     listingsByGame.numOfListings = listingsByGame.numOfListings.plus(
@@ -191,5 +200,11 @@ function getIdFromEventParams(
   price: BigInt,
   seller: Address
 ): string {
-  return gameId.toString() + "-" + price.toString() + "-" + seller.toHexString()
+  return (
+    gameId.toString() +
+    "-" +
+    price.toString() +
+    "-" +
+    seller.toString().toLowerCase()
+  )
 }

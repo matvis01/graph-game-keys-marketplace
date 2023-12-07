@@ -6,9 +6,9 @@ dataSources:
     name: GameKeyMarketplace
     network: sepolia
     source:
-      address: "0xBb71B82D92625E65a3E23d4E862CB9a178ef439a"
+      address: "0xA6DdFA266083Eb22222b81B163Df15F11801D486"
       abi: GameKeyMarketplace
-      startBlock: 4728160
+      startBlock: 4827914
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.7
