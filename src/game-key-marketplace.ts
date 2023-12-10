@@ -11,7 +11,7 @@ import {
   Genre,
   Tag
 } from "../generated/schema"
-import { BigInt, Address } from "@graphprotocol/graph-ts"
+import { BigInt, Address, Bytes } from "@graphprotocol/graph-ts"
 
 export function handleItemBought(event: ItemBoughtEvent): void {
   let id = getIdFromEventParams(
@@ -98,29 +98,31 @@ export function handleItemBought(event: ItemBoughtEvent): void {
 }
 
 export function handleItemCancelled(event: ItemCancelledEvent): void {
-  let id = event.params.gameId.toString()
-
-  let gameId = event.params.gameId.toString().split("-")[0]
-
-  let listingsByGame = ListingsByGame.load(gameId)
-
-  if (listingsByGame) {
-    let index = listingsByGame.allListings.indexOf(id)
-    listingsByGame.allListings = listingsByGame.allListings
-      .slice(0, index)
-      .concat(listingsByGame.allListings.slice(index + 1))
-    listingsByGame.numOfListings = listingsByGame.numOfListings.minus(
-      BigInt.fromI32(1)
-    )
-
-    listingsByGame.save()
-  }
+  let id = getIdFromEventParams(
+    event.params.gameId,
+    event.params.price,
+    event.params.seller
+  )
+  let gameId = event.params.gameId.toString()
 
   let itemListed = ItemListed.load(id)
-  if (itemListed) {
-    itemListed.numOfItems = itemListed.numOfItems.minus(BigInt.fromI32(1))
-    itemListed.save()
-  }
+  let listingsByGame = ListingsByGame.load(gameId)
+
+  if (!listingsByGame) return
+  if (!itemListed) return
+
+  let index = listingsByGame.allListings.indexOf(id)
+  listingsByGame.allListings = listingsByGame.allListings
+    .slice(0, index)
+    .concat(listingsByGame.allListings.slice(index + 1))
+  listingsByGame.numOfListings = listingsByGame.numOfListings.minus(
+    BigInt.fromI32(1)
+  )
+
+  listingsByGame.save()
+
+  itemListed.numOfItems = itemListed.numOfItems.minus(BigInt.fromI32(1))
+  itemListed.save()
 }
 
 export function handleItemListed(event: ItemListedEvent): void {
@@ -205,6 +207,6 @@ function getIdFromEventParams(
     "-" +
     price.toString() +
     "-" +
-    seller.toString().toLowerCase()
+    seller.toHexString().toLowerCase()
   )
 }

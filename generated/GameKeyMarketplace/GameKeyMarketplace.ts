@@ -49,8 +49,16 @@ export class ItemCancelled__Params {
     this._event = event;
   }
 
-  get gameId(): Bytes {
-    return this._event.parameters[0].value.toBytes();
+  get gameId(): BigInt {
+    return this._event.parameters[0].value.toBigInt();
+  }
+
+  get price(): BigInt {
+    return this._event.parameters[1].value.toBigInt();
+  }
+
+  get seller(): Address {
+    return this._event.parameters[2].value.toAddress();
   }
 }
 
@@ -269,6 +277,14 @@ export class CancelListingCall__Inputs {
 
   get listingId(): string {
     return this._call.inputValues[0].value.toString();
+  }
+
+  get gameId(): BigInt {
+    return this._call.inputValues[1].value.toBigInt();
+  }
+
+  get price(): BigInt {
+    return this._call.inputValues[2].value.toBigInt();
   }
 }
 
